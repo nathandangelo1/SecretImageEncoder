@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SecretImageEncoder"
-        mc:Ignorable="d"
+        mc:Ignorable="d" 
         
-        Icon="C:\Users\POBOYINSAMSARA\source\repos\SecretImageEncoder\SecretImageEncoder\spycon.jfif"
-        Title="TOP SECRET: Encoder" MinHeight="450" MinWidth="800" FontSize="20" BorderThickness="0"
+        Icon="C:\Users\POBOYINSAMSARA\source\repos\SecretImageEncoder\spycon.png"
+        Title="TOP SECRET: Encoder" Height="auto" Width="auto" FontSize="20" BorderThickness="0" Foreground="Black" 
         Background="{DynamicResource WindowBackgroundBrush}">
 
     <Window.Resources>
@@ -15,6 +15,7 @@
             <GradientStop Offset="0" Color="Black"/>
             <GradientStop Offset="1" Color="DarkSlateGray"/>
         </LinearGradientBrush>
+        
     </Window.Resources>
 
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -22,9 +23,9 @@
         <Grid Margin="10">
             <DockPanel>
                 <Menu DockPanel.Dock="Top" x:Name="mnuMain" Background="Black">
-                    <MenuItem Header="_File" FontSize="16" Foreground="AntiqueWhite">
+                    <MenuItem Header="_File" FontSize="16" Foreground="AntiqueWhite" FontWeight="SemiBold">
                         <MenuItem Header="_Load Image" Click="MenuItemOpen_Click" Foreground="Black" />
-                        <MenuItem Header="_Decode Image" Click="MenuItemDecode_Click" Foreground="Black" />
+                        <MenuItem Header="_Test Decoder" Click="MenuItemDecode_Click" Foreground="Black" />
                         <Separator />
                         <MenuItem Header="_Exit" Foreground="Black"/>
                     </MenuItem>
@@ -32,26 +33,30 @@
             </DockPanel>
 
             <!-- Column 2 -->
-            <TextBlock Grid.Column="2" HorizontalAlignment="Left" Grid.Row="2" Text="1. Enter message to be encoded:  " Foreground="AntiqueWhite" 
-                       FontWeight="Medium"   VerticalAlignment="Top" />
+            <TextBlock Grid.Column="2" HorizontalAlignment="Left" Grid.Row="2" Text="1. Enter message to be &#x0a; encoded: " 
+                       Foreground="AntiqueWhite" FontWeight="Medium"   VerticalAlignment="Bottom" />
             <TextBox x:Name="txtMessage" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="4" 
-                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" MinWidth="200" MinHeight="200" />
-            <TextBlock x:Name="ErrorBox" Grid.Column="2" HorizontalAlignment="Left"  Grid.Row="6" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Foreground="Red"/>
+                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" Height="300" />
+            <TextBlock x:Name="ErrorBox" Grid.Column="2" HorizontalAlignment="Left"  Grid.Row="6" 
+                       TextWrapping="Wrap" Text="" VerticalAlignment="Top" 
+                       Foreground="Red"/>
 
             <!-- Column 4 -->
                 <!-- Row 2 -->
             <TextBlock Grid.Column="4" HorizontalAlignment="Left" Grid.Row="2" Foreground="AntiqueWhite" FontWeight="Medium" 
-                       TextWrapping="Wrap" Text="2. Select image to hide message:  " VerticalAlignment="Top"/>
+                       TextWrapping="Wrap" Text="2. Select image to&#x0a; hide message:  " VerticalAlignment="Bottom"/>
                 <!-- Row 4 -->
-            <Image x:Name="imgToEncode" Grid.Column="4" Grid.Row="4" HorizontalAlignment="Left" Height="200" Width="200" VerticalAlignment="Top" />
+            <Image x:Name="imgToEncode" Grid.Column="4" Grid.Row="4" HorizontalAlignment="Left" Height="300" Width="300" VerticalAlignment="Top" />
             <Button x:Name="btnSelectImage" Grid.Column="4" Grid.Row="4" Content="Select Image" HorizontalAlignment="Center" 
                     VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="MenuItemOpen_Click" />
                 <!-- Row 6 -->
-            <TextBlock x:Name="txtHiddenLblForEncodedImage" Grid.Column="4" HorizontalAlignment="Left" Grid.Row="6" TextWrapping="Wrap" Text="Verify Encoded Image: " 
-                       VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Hidden"/>
+            <TextBlock x:Name="txtHiddenEncodedImageLabel" Grid.Column="4" HorizontalAlignment="Left" Grid.Row="7"  
+                       Text="Verify Encoded Image: " VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Hidden"/>
+            <TextBlock x:Name="txtDecodedMessage" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="8" TextWrapping="Wrap" 
+                       Text="" VerticalAlignment="Center" Foreground="AntiqueWhite" Visibility="Hidden"/>
                 <!--Row 8-->
-            <Image x:Name="imgEncoded" Grid.Column="4" Grid.Row="8" HorizontalAlignment="Left" MinHeight="200" MinWidth="200" VerticalAlignment="Top" 
-                   Visibility="Collapsed" ScrollViewer.CanContentScroll="True" />
+            <Image x:Name="imgEncoded" Grid.Column="4" Grid.Row="8" HorizontalAlignment="Left" Height="300" Width="300" 
+                   VerticalAlignment="Top" Visibility="visible" />
 
                 <!-- Column 6 -->
             <Button x:Name="btnEncode" Grid.Column="6" Grid.Row="4" Content="3. Encode Message" HorizontalAlignment="Center" 
@@ -79,7 +84,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
