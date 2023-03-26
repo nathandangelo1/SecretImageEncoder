@@ -25,6 +25,7 @@
                 <Menu DockPanel.Dock="Top" x:Name="mnuMain" Background="Black">
                     <MenuItem Header="_File" FontSize="16" Foreground="AntiqueWhite" FontWeight="SemiBold">
                         <MenuItem Header="_Load Image" Click="MenuItemOpen_Click" Foreground="Black" />
+                        <MenuItem Header="_Encode Message" Click="btnEncode_Click" Foreground="Black" />
                         <MenuItem Header="_Test Decoder" Click="MenuItemDecode_Click" Foreground="Black" />
                         <Separator />
                         <MenuItem Header="_Exit" Foreground="Black"/>
@@ -33,45 +34,60 @@
             </DockPanel>
 
             <!-- Column 2 -->
-            <TextBlock Grid.Column="2" HorizontalAlignment="Left" Grid.Row="2" Text="1. Enter message to be &#x0a; encoded: " 
+            <TextBlock Grid.Column="2" HorizontalAlignment="left" Grid.Row="2" Text="Enter message: " 
                        Foreground="AntiqueWhite" FontWeight="Medium"   VerticalAlignment="Bottom" />
             <TextBox x:Name="txtMessage" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="4" 
                      TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300" Height="300" />
-            <TextBlock x:Name="ErrorBox" Grid.Column="2" HorizontalAlignment="Left"  Grid.Row="6" 
+            <TextBlock x:Name="ErrorBox" Grid.Column="2" Grid.Row="6" HorizontalAlignment="Left"  
                        TextWrapping="Wrap" Text="" VerticalAlignment="Top" 
                        Foreground="Red"/>
+            <TextBlock x:Name="txtDecodedMessage" Grid.Column="8" HorizontalAlignment="Left" Grid.Row="8" TextWrapping="Wrap" 
+                       Text="" VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Visible"/>
+            <TextBlock x:Name="txtDecodedMsgLabel" Grid.Column="8" HorizontalAlignment="Left" Grid.Row="6" TextWrapping="Wrap" 
+                       Text="Decoded message: " VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Hidden"/>
 
             <!-- Column 4 -->
                 <!-- Row 2 -->
-            <TextBlock Grid.Column="4" HorizontalAlignment="Left" Grid.Row="2" Foreground="AntiqueWhite" FontWeight="Medium" 
-                       TextWrapping="Wrap" Text="2. Select image to&#x0a; hide message:  " VerticalAlignment="Bottom"/>
+            <TextBlock Grid.Column="4" Grid.Row="2" HorizontalAlignment="left" Foreground="AntiqueWhite" FontWeight="Medium" 
+                       TextWrapping="Wrap" Text="Select image:  " VerticalAlignment="Bottom" />
                 <!-- Row 4 -->
-            <Image x:Name="imgToEncode" Grid.Column="4" Grid.Row="4" HorizontalAlignment="Left" Height="300" Width="300" VerticalAlignment="Top" />
+            <Image x:Name="imgToEncode" Grid.Column="4" Grid.Row="4" HorizontalAlignment="left" Height="400" Width="400" 
+                   VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor" />
             <Button x:Name="btnSelectImage" Grid.Column="4" Grid.Row="4" Content="Select Image" HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="MenuItemOpen_Click" />
-                <!-- Row 6 -->
-            <TextBlock x:Name="txtHiddenEncodedImageLabel" Grid.Column="4" HorizontalAlignment="Left" Grid.Row="7"  
-                       Text="Verify Encoded Image: " VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Hidden"/>
-            <TextBlock x:Name="txtDecodedMessage" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="8" TextWrapping="Wrap" 
-                       Text="" VerticalAlignment="Center" Foreground="AntiqueWhite" Visibility="Hidden"/>
-                <!--Row 8-->
-            <Image x:Name="imgEncoded" Grid.Column="4" Grid.Row="8" HorizontalAlignment="Left" Height="300" Width="300" 
-                   VerticalAlignment="Top" Visibility="visible" />
+                    Height="40" Width="130" VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" 
+                    Click="MenuItemOpen_Click" />
+            
+            <!-- Row 6 -->
+            <TextBlock x:Name="txtHiddenEncodedImageLabel" Grid.Column="4" HorizontalAlignment="left" Grid.Row="6"  
+                       Text="Verify Encoded Image: " VerticalAlignment="Bottom" Foreground="AntiqueWhite" Visibility="Hidden"/>
+            
+            <!--Row 8-->
+            <Image x:Name="imgEncoded" Grid.Column="4" Grid.Row="8" HorizontalAlignment="left" MinHeight="400" Width="400" 
+                   VerticalAlignment="Top" Visibility="Collapsed" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
 
                 <!-- Column 6 -->
-            <Button x:Name="btnEncode" Grid.Column="6" Grid.Row="4" Content="3. Encode Message" HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="btnEncode_Click" />
-            <!-- Column 6 -->
-            <Button x:Name="btnSave" Grid.Column="6" Grid.Row="6" Content="Save" HorizontalAlignment="Center" Width="80" Height="40"
-                    VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="btnSave_Click" />
+            <!--<TextBlock Grid.Column="6" HorizontalAlignment="Center" Grid.Row="2" Text="3. Encode message: " 
+                       Foreground="AntiqueWhite" FontWeight="Medium" VerticalAlignment="Bottom" />-->
+            <Button x:Name="btnEncode" Grid.Column="6" Grid.Row="4" Content="Encode Message" HorizontalAlignment="Center" 
+                    Width="160" Height="40" VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" 
+                    Click="btnEncode_Click" />
+            <!-- Column 8 -->
+            <!--<TextBlock Grid.Column="8" HorizontalAlignment="left" Grid.Row="2" Text="4. Save " 
+                       Foreground="AntiqueWhite" FontWeight="Medium" VerticalAlignment="Bottom" />-->
+            <Button x:Name="btnSave" Grid.Column="8" Grid.Row="4" Content="Save" HorizontalAlignment="left" Height="40" Width="70"
+                    VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="btnSave_Click"
+                    Visibility="Collapsed"/>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
@@ -79,12 +95,12 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="20"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
