@@ -15,7 +15,7 @@
             <GradientStop Offset="0" Color="Black"/>
             <GradientStop Offset="1" Color="DarkSlateGray"/>
         </LinearGradientBrush>
-        
+
     </Window.Resources>
 
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -27,11 +27,14 @@
                         <MenuItem Header="_Load Image" Click="MenuItemOpen_Click" Foreground="Black" />
                         <MenuItem Header="_Encode Message" Click="btnEncode_Click" Foreground="Black" />
                         <MenuItem Header="_Test Decoder" Click="MenuItemDecode_Click" Foreground="Black" />
+                        <MenuItem Header="_Reset Encoder" Click="MenuItemReset_Click" Foreground="Black" />
                         <Separator />
-                        <MenuItem Header="_Exit" Foreground="Black"/>
+                        <MenuItem Header="_Exit" Click="MenuItemClose_Click" Foreground="Black"/>
                     </MenuItem>
                 </Menu>
+                <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Height="20" Width="30"/>
             </DockPanel>
+
 
             <!-- Column 2 -->
             <TextBlock Grid.Column="2" HorizontalAlignment="left" Grid.Row="2" Text="Enter message: " 
@@ -41,51 +44,67 @@
             <TextBlock x:Name="ErrorBox" Grid.Column="2" Grid.Row="6" HorizontalAlignment="Left"  
                        TextWrapping="Wrap" Text="" VerticalAlignment="Top" 
                        Foreground="Red"/>
-            <TextBlock x:Name="txtDecodedMessage" Grid.Column="8" HorizontalAlignment="Left" Grid.Row="8" TextWrapping="Wrap" 
-                       Text="" VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Visible"/>
-            <TextBlock x:Name="txtDecodedMsgLabel" Grid.Column="8" HorizontalAlignment="Left" Grid.Row="6" TextWrapping="Wrap" 
+            <TextBlock x:Name="txtDecodedMessage" Grid.Column="6" HorizontalAlignment="Left" Grid.Row="8" TextWrapping="Wrap" 
+                       Text="" VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Collapsed"/>
+            <TextBlock x:Name="txtDecodedMsgLabel" Grid.Column="6" HorizontalAlignment="Center" Grid.Row="6" TextWrapping="Wrap" 
                        Text="Decoded message: " VerticalAlignment="Top" Foreground="AntiqueWhite" Visibility="Hidden"/>
 
             <!-- Column 4 -->
-                <!-- Row 2 -->
+            <!-- Row 2 -->
             <TextBlock Grid.Column="4" Grid.Row="2" HorizontalAlignment="left" Foreground="AntiqueWhite" FontWeight="Medium" 
                        TextWrapping="Wrap" Text="Select image:  " VerticalAlignment="Bottom" />
-                <!-- Row 4 -->
-            <Image x:Name="imgToEncode" Grid.Column="4" Grid.Row="4" HorizontalAlignment="left" Height="400" Width="400" 
+            <!-- Row 4 -->
+            <Image x:Name="imgToEncode" Grid.Column="4" Grid.Row="4" HorizontalAlignment="left" Height="auto" Width="auto" MaxHeight="400" MaxWidth="400" 
                    VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor" />
             <Button x:Name="btnSelectImage" Grid.Column="4" Grid.Row="4" Content="Select Image" HorizontalAlignment="Center" 
                     Height="40" Width="130" VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" 
                     Click="MenuItemOpen_Click" />
-            
+
             <!-- Row 6 -->
             <TextBlock x:Name="txtHiddenEncodedImageLabel" Grid.Column="4" HorizontalAlignment="left" Grid.Row="6"  
-                       Text="Verify Encoded Image: " VerticalAlignment="Bottom" Foreground="AntiqueWhite" Visibility="Hidden"/>
-            
+                       Text="Verify Encoded Image: " FontWeight="Medium" VerticalAlignment="Bottom" Foreground="AntiqueWhite" Visibility="Hidden"/>
+
             <!--Row 8-->
-            <Image x:Name="imgEncoded" Grid.Column="4" Grid.Row="8" HorizontalAlignment="left" MinHeight="400" Width="400" 
+            <Image x:Name="imgEncoded" Grid.Column="4" Grid.Row="8" HorizontalAlignment="left" MaxHeight="400" MaxWidth="400" 
                    VerticalAlignment="Top" Visibility="Collapsed" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
 
-                <!-- Column 6 -->
+            <!-- Column 6 -->
             <!--<TextBlock Grid.Column="6" HorizontalAlignment="Center" Grid.Row="2" Text="3. Encode message: " 
                        Foreground="AntiqueWhite" FontWeight="Medium" VerticalAlignment="Bottom" />-->
-            <Button x:Name="btnEncode" Grid.Column="6" Grid.Row="4" Content="Encode Message" HorizontalAlignment="Center" 
+            <StackPanel Grid.Column="6" Grid.Row="4" Orientation="Vertical" VerticalAlignment="Center">
+
+                <Button x:Name="btnEncode" Grid.Column="6" Grid.Row="4" Content="Encode Message" HorizontalAlignment="Center" 
                     Width="160" Height="40" VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" 
-                    Click="btnEncode_Click" />
+                    Click="btnEncode_Click" BorderBrush="AntiqueWhite" BorderThickness=".5" />
+                <Button x:Name="btnSave" Grid.Column="6" Grid.Row="5" Content="Save" HorizontalAlignment="Center" Width="160" Height="40"
+                    VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="btnSave_Click"
+                    Visibility="Collapsed"/>
+                <Button x:Name="btnTestDecoder" Grid.Column="6" Grid.Row="6" Content="Test Decoder" HorizontalAlignment="Center" 
+                    Width="160" Height="40" VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" 
+                    Click="MenuItemDecode_Click" Visibility="Collapsed"/>
+                <Button x:Name="btnReset" Grid.Column="6" Grid.Row="7" Content="Reset Encoder" HorizontalAlignment="Center" 
+                    Width="160" Height="40" VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" 
+                    Click="MenuItemReset_Click" Visibility="Collapsed"/>
+
+            </StackPanel>
             <!-- Column 8 -->
             <!--<TextBlock Grid.Column="8" HorizontalAlignment="left" Grid.Row="2" Text="4. Save " 
                        Foreground="AntiqueWhite" FontWeight="Medium" VerticalAlignment="Bottom" />-->
-            <Button x:Name="btnSave" Grid.Column="8" Grid.Row="4" Content="Save" HorizontalAlignment="left" Height="40" Width="70"
+            <!--<Button x:Name="btnSave" Grid.Column="8" Grid.Row="4" Content="Save" HorizontalAlignment="left" Height="40" Width="70"
                     VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="btnSave_Click"
-                    Visibility="Collapsed"/>
+                    Visibility="Collapsed"/>-->
+
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="0" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="100" />
+
                 <ColumnDefinition Width="auto" />
+
                 <ColumnDefinition Width="100" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
@@ -94,7 +113,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="auto"/>

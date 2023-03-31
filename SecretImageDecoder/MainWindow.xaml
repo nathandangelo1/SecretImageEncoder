@@ -17,10 +17,10 @@
     </Window.Resources>
 
     <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-        <Grid Margin="10">
+        <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="0" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="auto" />
@@ -58,18 +58,18 @@
                        TextWrapping="Wrap" Text="Image:  " VerticalAlignment="Bottom"/>
             <Button x:Name="btnSelectImage" Grid.Column="2" Grid.Row="4" Content="Select Image" HorizontalAlignment="left" 
                     VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="MenuItemSelect_Click" />
-            <TextBlock x:Name="txtErrorBox" Grid.Column="2" HorizontalAlignment="Left"  Grid.Row="6" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Foreground="Red"/>
-            <Image x:Name="imgToDecode" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" Height="200" Width="200" VerticalAlignment="Top" />
+            <TextBlock x:Name="ErrorBox" Grid.Column="2" HorizontalAlignment="Left"  Grid.Row="6" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Foreground="Red"/>
+            <Image x:Name="imgToDecode" Grid.Column="2" Grid.Row="4" HorizontalAlignment="Left" Height="auto" Width="auto" MaxHeight="400" MaxWidth="400"  VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor" />
 
             <!-- Column 4 -->
-            <Button x:Name="btnDecode" Grid.Column="4" Grid.Row="4" Content="Decode Message" HorizontalAlignment="Center" 
+            <Button x:Name="btnDecode" Grid.Column="4" Grid.Row="4" Content="Decode Message" HorizontalAlignment="Left" 
                     VerticalAlignment="Center" Background="DarkSlateGray" Foreground="AntiqueWhite" Click="btnDecode_Click"  />
 
             <!-- Column 6 -->
             <TextBlock Grid.Column="6" HorizontalAlignment="Left" Grid.Row="2" Text="Decoded Message:   " Foreground="AntiqueWhite" 
                        FontWeight="Medium"   VerticalAlignment="Bottom" />
             <TextBox x:Name="txtMessage" Grid.Column="6" HorizontalAlignment="Left" Grid.Row="4" 
-                     TextWrapping="Wrap" Text="" VerticalAlignment="Top" MinWidth="200" MinHeight="200" />
+                     TextWrapping="Wrap"  Text="" VerticalAlignment="Top"  Height="auto" MinWidth="100" MinHeight="100" MaxWidth="400" />
 
         </Grid>
     </ScrollViewer>
