@@ -51,14 +51,28 @@ namespace SecretImageEncoder
             }
         }
         public string? MaxColor { get; set; }
-        public List<byte>? PaletteBinary { get; set; }
+        public List<byte>? PixelPaletteBinary { get; set; }
         public string[]? PixelPaletteAscii { get; set; }
         public BitmapMaker? PreEncodedBitmap { get; set; }
         public BitmapMaker? EncodedBitmap { get; set; }
         public int? MsgBitCount { get; set; }
-        public bool IsEncoded { get; set; }
-        
-        public Ppm_Image(string path) => OriginalImagePath = path; // expression bodied constructor
+        public bool IsEncoded
+        {
+            get
+            {
+                if (PixelPaletteAscii == null && PixelPaletteBinary == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+        }
+
+        public Ppm_Image(string path) => OriginalImagePath = path; // expression-bodied constructor
         public void Clear()
         {
             OriginalImagePath = null;
@@ -66,13 +80,13 @@ namespace SecretImageEncoder
             PpmMessage = null;
             Dimensions = null;
             MaxColor = null;
-            PaletteBinary = null;
+            PixelPaletteBinary = null;
             PixelPaletteAscii = null;
             PreEncodedBitmap = null;
             EncodedBitmap = null;
             MsgBitCount = null;
             EncodedImagePath = null;
-            IsEncoded = false;
+            
         }
         public WriteableBitmap LoadPPMImage()
         {
@@ -137,7 +151,7 @@ namespace SecretImageEncoder
             Dimensions = metaData[2];
             MaxColor = metaData[3];
 
-            PaletteBinary = new List<byte>();
+            PixelPaletteBinary = new List<byte>();
 
             // prepping the LSB of message(max256 bytes) to 0 for later encoding
             for (int i = 0; i < 256; i++)
@@ -146,13 +160,13 @@ namespace SecretImageEncoder
                 if (currentByte % 2 == 1) currentByte--;
 
                 // PROCESS PIXEL DATA
-                PaletteBinary.Add(currentByte);
+                PixelPaletteBinary.Add(currentByte);
             }
 
             // after 256 bytes just add bytes without modification
             while (infile.Position < infile.Length)
             {
-                PaletteBinary.Add((byte)infile.ReadByte());
+                PixelPaletteBinary.Add((byte)infile.ReadByte());
             }
 
             //// PROCESS HEADER DIMENSIONS                
@@ -160,17 +174,20 @@ namespace SecretImageEncoder
             //int width = int.Parse(aryDimensions[0]);
             //int height = int.Parse(aryDimensions[1]);
 
-            // PROCESS HEADER PALETTE DATA
-            Color[] aryColors = new Color[PaletteBinary.Count / 3];
+            int rem = PixelPaletteBinary.Count % 3;
+            int len = PixelPaletteBinary.Count - rem;
 
-            for (int paletteIndex = 0; paletteIndex * 3 < PaletteBinary.Count - 1; paletteIndex++)
+            // PROCESS HEADER PALETTE DATA
+            Color[] aryColors = new Color[len / 3];
+
+            for (int paletteIndex = 0; paletteIndex * 3 < len - 1; paletteIndex++)
             {
                 int newIndex = paletteIndex * 3;
 
                 aryColors[paletteIndex].A = byte.Parse(MaxColor);
-                aryColors[paletteIndex].R = PaletteBinary[newIndex];
-                aryColors[paletteIndex].G = PaletteBinary[++newIndex];
-                aryColors[paletteIndex].B = PaletteBinary[++newIndex];
+                aryColors[paletteIndex].R = PixelPaletteBinary[newIndex];
+                aryColors[paletteIndex].G = PixelPaletteBinary[++newIndex];
+                aryColors[paletteIndex].B = PixelPaletteBinary[++newIndex];
             }// end for
             infile.Close();
 
@@ -182,7 +199,7 @@ namespace SecretImageEncoder
             int colorIndex = 0;
 
             // LOOPING THORUGH PIXEL DATA TO SET THE PIXELS
-            for (int index = 0; index < PaletteBinary.Count; index++)
+            for (int index = 0; index < PixelPaletteBinary.Count; index++)
             {
                 Color plotColor = aryColors[colorIndex];
                 bmpMaker.SetPixel(plotX, plotY, plotColor);
@@ -242,9 +259,12 @@ namespace SecretImageEncoder
 
             }
 
+            int rem = PixelPaletteAscii.Length % 3;
+            int len = PixelPaletteAscii.Length - rem;
+
             //PROCESS HEADER PALETTE DATA
-            Color[] aryColors = new Color[PixelPaletteAscii.Length / 3];
-            for (int paletteIndex = 0; paletteIndex * 3 < PixelPaletteAscii.Length - 1; paletteIndex++)
+            Color[] aryColors = new Color[len / 3];
+            for (int paletteIndex = 0; paletteIndex * 3 < len - 1; paletteIndex++)
             {
                 int newIndex = paletteIndex * 3;
 
@@ -318,11 +338,11 @@ namespace SecretImageEncoder
 
             }
 
-            if (Header == "P3") IsEncoded = EncodeAscii(msgBits);
+            if (Header == "P3") EncodeAscii(msgBits);
 
-            else if (Header == "P6") IsEncoded = EncodeBinary(msgBits);
+            else if (Header == "P6") EncodeBinary(msgBits);
 
-            bool EncodeAscii(bool[] msgBits)
+            void EncodeAscii(bool[] msgBits)
             {
                 var pixelData = PixelPaletteAscii;
 
@@ -403,17 +423,16 @@ namespace SecretImageEncoder
 
                 EncodedBitmap = bmpMaker;
 
-                return true;
             }
 
-            bool EncodeBinary(bool[] msgBits)
+            void EncodeBinary(bool[] msgBits)
             {
                 string messageBitS = "";
 
                 // for the length of the message in bits
                 for (int i = 0; i < msgBits.Length; i++)
                 {
-                    var currentByte = PaletteBinary[i];
+                    var currentByte = PixelPaletteBinary[i];
 
                     // if bit in message equals '1', add 1 to currentByte, making it odd
                     if (msgBits[i].Equals(true))
@@ -421,12 +440,12 @@ namespace SecretImageEncoder
                         currentByte++; // oddify
 
                         //then add to the palette
-                        PaletteBinary[i] = currentByte;
+                        PixelPaletteBinary[i] = currentByte;
                     }
                     // else, msgBit=0 ( byte is already set to 'zero' aka Even )
                     else
                     {
-                        PaletteBinary[i] = currentByte; // add to palette unchanged
+                        PixelPaletteBinary[i] = currentByte; // add to palette unchanged
                     }
                 }
 
@@ -444,23 +463,23 @@ namespace SecretImageEncoder
                 int colorIndex = 0;
 
                 //PROCESS HEADER PALETTE DATA
-                Color[] aryColors = new Color[PaletteBinary.Count / 3];
+                Color[] aryColors = new Color[PixelPaletteBinary.Count / 3];
 
-                for (int paletteIndex = 0; paletteIndex * 3 < PaletteBinary.Count - 1; paletteIndex++)
+                for (int paletteIndex = 0; paletteIndex * 3 < PixelPaletteBinary.Count - 1; paletteIndex++)
                 {
                     int newIndex = paletteIndex * 3;
 
                     aryColors[paletteIndex].A = byte.Parse(MaxColor);
 
-                    aryColors[paletteIndex].R = PaletteBinary[newIndex];
+                    aryColors[paletteIndex].R = PixelPaletteBinary[newIndex];
 
-                    aryColors[paletteIndex].G = PaletteBinary[++newIndex];
+                    aryColors[paletteIndex].G = PixelPaletteBinary[++newIndex];
 
-                    aryColors[paletteIndex].B = PaletteBinary[++newIndex];
+                    aryColors[paletteIndex].B = PixelPaletteBinary[++newIndex];
                 }//end for
 
                 //LOOPING THORUGH PIXEL DATA TO SET THE PIXELS
-                for (int index = 0; index < PaletteBinary.Count; index++)
+                for (int index = 0; index < PixelPaletteBinary.Count; index++)
                 {
                     Color plotColor = aryColors[colorIndex];
                     bmpMaker.SetPixel(plotX, plotY, plotColor);
@@ -480,7 +499,6 @@ namespace SecretImageEncoder
 
                 EncodedBitmap = bmpMaker;
 
-                return true;
             }
         }
         public void Save()
@@ -546,7 +564,7 @@ namespace SecretImageEncoder
                     outfile.WriteByte((byte)c);
                 }
 
-                foreach (byte b in PaletteBinary)
+                foreach (byte b in PixelPaletteBinary)
                 {
                     outfile.WriteByte((byte)b); //Convert  data value to byte type // Write byte to file
                 }//end for
@@ -559,7 +577,7 @@ namespace SecretImageEncoder
         /// <summary>
         /// returns true if Decode successful
         /// </summary>
-        public bool Decode(out string? message)
+        public bool Decode(string encodedImagePath, out string? message)
         {
             byte currentByte;
 
@@ -569,7 +587,10 @@ namespace SecretImageEncoder
                 return false;
             }
 
-            FileStream infile = new FileStream(EncodedImagePath, FileMode.Open);
+
+            
+
+            FileStream infile = new FileStream(encodedImagePath, FileMode.Open);
             byte lineFeed = 10;
             List<List<int>> msgBytes = new();
 

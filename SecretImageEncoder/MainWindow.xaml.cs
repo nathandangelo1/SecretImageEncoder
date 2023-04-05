@@ -71,7 +71,7 @@ public partial class MainWindow : Window
 
             ppm.EncodeMessage(hiddenMsg);
 
-            if (ppm.IsEncoded)
+            if (ppm.PixelPaletteBinary!=null || ppm.PixelPaletteAscii!=null)
             {
                 btnEncode.Visibility = Visibility.Collapsed;
                 btnSave.Visibility = Visibility.Visible;
@@ -100,7 +100,7 @@ public partial class MainWindow : Window
     {
         byte currentByte;
 
-        if (ppm is null || ppm.IsEncoded == false)
+        if (ppm is null || (ppm.PixelPaletteBinary==null && ppm.PixelPaletteAscii==null))
         {
             ErrorBox.Text = "Image must be encoded and saved first";
             ErrorBox.Visibility = Visibility.Visible;
@@ -108,7 +108,7 @@ public partial class MainWindow : Window
         }
         else
         {
-            if ( ppm.Decode( out string msg))
+            if ( ppm.Decode(ppm.EncodedImagePath, out string msg))
             {
                 txtDecodedMsgLabel.Visibility = Visibility.Visible;
                 txtHiddenEncodedImageLabel.Visibility = Visibility.Visible;
